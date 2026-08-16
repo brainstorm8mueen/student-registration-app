@@ -122,6 +122,7 @@ jobs:
               --name "$APP_NAME" \
               --restart unless-stopped \
               -p "$HOST_PORT:$CONTAINER_PORT" \
+              -e MONGO_URI="$MONGO_URI" \
               "$IMAGE_URI"
             sleep 10
             curl -f "http://localhost:$HOST_PORT/health"
