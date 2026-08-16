@@ -5,6 +5,26 @@ from dotenv import load_dotenv
 import certifi
 import os
 
+os.environ.setdefault(
+    "MONGO_URI",
+    "mongodb://localhost:27017/testdb"
+)
+
+import pytest
+import mongomock
+from app import app, mongo
+
+@pytest.fixture
+def client(monkeypatch):
+    app.config["TESTING"] = True
+
+    mock_client = mongomock.MongoClient()
+    mock_db = mock_client["testdb"]
+
+    monkeypatch.setattr(mongo, "db", mock_db, raising=False)
+
+    yield app.test_client()
+    
 # Load env vars
 load_dotenv()
 
